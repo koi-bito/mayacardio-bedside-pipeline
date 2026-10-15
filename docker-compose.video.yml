@@ -1,0 +1,49 @@
+services:
+  cloud:
+    container_name: mayacardio-cloud-1
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.video
+    command: python -m uvicorn cloud.app:app --host 0.0.0.0 --port 8000
+    environment:
+      - MAYA_CLOUD_DB_PATH=/app/cloud_data.db
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 2s
+      timeout: 2s
+      retries: 10
+      start_period: 3s
+    networks:
+      - mayanet
+    restart: unless-stopped
+
+  edge:
+    container_name: mayacardio-edge-1
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.video
+    cpus: 4
+    mem_limit: 2g
+    command: /app/start.sh
+    environment:
+      - MAYA_CLOUD_URL=http://cloud:8000
+      - MOCK_HOST=127.0.0.1
+      - MOCK_PORT=7100
+      - MAYA_DB_PATH=/app/device_data.db
+    volumes:
+      - ./evidence:/evidence
+    depends_on:
+      cloud:
+        condition: service_healthy
+    networks:
+      - mayanet
+    restart: unless-stopped
+
+networks:
+  mayanet:
+    name: mayanet
+    driver: bridge

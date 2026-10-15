@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# SQLite databases & temp files
+*.db
+*.db-wal
+*.db-shm
+*.db-journal
+device_data.db*
+cloud_data.db*
+
+# Testing & Cache
+.pytest_cache/
+.coverage
+htmlcov/
+evidence/*.jsonl
+
+# Local Submission Prep & Notes (not tracked)
+submission_notes/
+submission.zip
+evidence/
+*.mp4

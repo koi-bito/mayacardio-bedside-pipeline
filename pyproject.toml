@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mayacardio-pipeline"
+version = "0.1.0"
+description = "MayaCardio Bedside Biosignal Pipeline - Never Lose a Heartbeat"
+authors = [{ name = "MayaCardio Candidate" }]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "httpx>=0.25.0",
+    "pydantic>=2.0.0",
+    "fastapi>=0.100.0",
+    "uvicorn>=0.23.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+]
+
+[project.scripts]
+pipeline = "pipeline.cli:main"
+biosignal-mock = "mock.biosignal_mock:main"
+check-ground-truth = "mock.check_ground_truth:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pipeline*", "mock*", "cloud*"]
